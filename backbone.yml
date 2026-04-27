@@ -1,0 +1,11 @@
+# backbone.yml
+version: 1
+
+structure:
+  config: config/
+  src: src/
+  tests: tests/
+  docs: docs/
+
+conventions:
+  test_pattern: "*_test.py"
