@@ -53,8 +53,8 @@ Apply the template, then fill in each section using the user's input + your own 
 **Non-negotiable fields** (every ticket must have these):
 
 - A sharp, actionable **title** (see Title Rules below)
-- At least one **Acceptance Criterion** (see AC Rules below)
 - A clear **Context / Why** (even one sentence)
+- At least one **Acceptance Criterion** (see AC Rules below)
 
 **Infer what you can** — don't leave fields blank with "N/A" just because the user didn't mention them. Use reasonable defaults based on context. Flag anything that genuinely needs input from the user.
 
@@ -64,12 +64,65 @@ Apply the template, then fill in each section using the user's input + your own 
 
 Present the full ticket in a clean, readable format.
 
-After the ticket, add a short **"Reviewer Notes"** section (3–5 bullet points max) flagging:
+After the ticket, add a **"Notes"** section of max 5 bullets — terse, one line each. Only include:
 
 - Assumptions you made that the user should validate
+- A blocking unknown the dev cannot resolve alone
 - Edge cases not covered by the AC
+- A scope assumption the user should confirm
 - Missing information that could block a developer
 - Suggestions to improve scope, split the ticket, or add sub-tasks
+- A split suggestion if the ticket clearly exceeds 3 dev days
+
+**Skip the Notes section entirely if there's nothing worth flagging.**
+
+---
+
+### Step 5 — Save to file
+
+Save the ticket as a markdown file and share it with the user:
+
+- **Path:** `docs/tickets/[ticket-slug].md`
+- **Slug:** lowercase, hyphens, no brackets — derived from the title. Ex: `fms-ui-implement-fleet-crud.md`
+- Content: exact same markdown presented to the user
+- Use the `present_files` tool to give the user a download link
+
+---
+
+### Step 6 — Generate the Plan prompt
+
+After saving the ticket, generate a **Plan prompt** ready to be pasted into a coding agent (Cursor, Claude Code, etc.).
+
+The prompt must instruct the agent to:
+
+1. Read the ticket and explore the relevant codebase **before** proposing anything
+2. Produce a structured plan (files to create, files to modify, execution order)
+3. **Stop and wait for approval** before writing any code
+   Template:
+
+\`\`\`
+
+## Plan Task — [ticket title]
+
+Read the following ticket carefully, then explore the codebase to understand the current structure before proposing anything.
+
+--- TICKET ---
+[paste full ticket content here]
+--- END TICKET ---
+
+Your task is to produce a plan — not to write code yet.
+
+The plan must include:
+
+- List of files to create (with proposed path and responsibility)
+- List of files to modify (with a short description of what changes)
+- Execution order (what gets built first and why)
+- Any ambiguity or blocking unknown that would prevent implementation
+  Do not write any code. Output the plan, then stop and wait for approval.
+  \`\`\`
+
+Fill in the ticket content and save the prompt as `docs/tickets/[ticket-slug].plan.md`.
+Present both files to the user together.
 
 ---
 
@@ -81,16 +134,12 @@ Format: `[Scope] Verb + Noun + Context`
 - Include the affected component or area
 - Be specific enough to distinguish from other tickets
 - Keep under ~80 characters
-
-**Good examples:**
-
+  **Good examples:**
 - `[API] Add pagination to GET /properties endpoint`
 - `[FE] Fix broken layout on PropertyCard at mobile breakpoint`
 - `[Infra] Migrate Redis config to environment-based secrets`
 - `[Auth] Implement refresh token rotation on session expiry`
-
-**Bad examples:**
-
+  **Bad examples:**
 - `Fix bug` — too vague
 - `Update the thing` — meaningless
 - `Backend changes for new feature` — no action, no scope
@@ -105,8 +154,7 @@ Each AC must be:
 - **Outcome-oriented** — describes what happens, not how to implement it
 - **Unambiguous** — no subjective terms like "fast", "intuitive", "simple"
 - **Self-contained** — one condition per criterion
-
-**Preferred format:** `Given [context], when [action], then [outcome]`
+  **Preferred format:** `Given [context], when [action], then [outcome]`
 
 Or simple bullet format: `The [actor] can [do X] when [condition]`
 
@@ -115,8 +163,7 @@ Every ticket should cover:
 - ✅ Happy path (main success scenario)
 - ✅ At least one edge case or boundary condition
 - ✅ Error/failure state (if applicable)
-
-**Good AC:**
+  **Good AC:**
 
 ```
 - Given a valid session, when the user navigates to /dashboard, they see their property list
