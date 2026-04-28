@@ -17,3 +17,7 @@
 
 **Skip:** Quick factual questions, trivial taasks with no new info.
 **DO NOT ASK. Just update the files when you learn something.**
+
+### Plan Before to Act
+
+**Do not make any changes until you have 95% confidence in what you need to build. Ask me follow-up questions until you reach that confidence.**
