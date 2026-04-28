@@ -108,3 +108,4 @@ After building, run `/impeccable audit` to catch anti-patterns, then use the fro
 - No API keys required — `npx getdesign@latest` is a public CLI
 - The collection is actively maintained: [github.com/VoltAgent/awesome-design-md](https://github.com/VoltAgent/awesome-design-md)
 - Contributions welcome — see `CONTRIBUTING.md` in the repo
+- https://getdesign.md/
